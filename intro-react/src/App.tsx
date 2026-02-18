@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { isEmail } from './utils/isEmail'
-import PostList from './PostList'
+import PostList from './pages/PostList'
 import ContinuousSlider from './utils/ContinuousSlider'
 import { LearningHooks } from './LearningHooks'
 

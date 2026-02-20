@@ -1,13 +1,13 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { PostListResponse } from "../types";
+import type { AsyncDataState, PostListResponse  } from "../types";
 
 export type PostState = {
     posts?: PostListResponse
-    isLoading: boolean
+    dataState?: AsyncDataState
 }
 
 const initialState: PostState = {
-    isLoading: false
+    dataState: 'pending'
 }
 
 export const postSlice = createSlice({
@@ -17,8 +17,8 @@ export const postSlice = createSlice({
     setPosts: (state, action: PayloadAction<PostListResponse | undefined>) => {
         state.posts = action.payload
     },
-    setIsLoading: (state, action: PayloadAction<boolean>) => {
-        state.isLoading = action.payload
+    setDataState: (state, action: PayloadAction<AsyncDataState>) => {
+        state.dataState = action.payload
     }
   },
 })

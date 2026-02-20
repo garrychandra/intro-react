@@ -10,7 +10,7 @@ export default function YourPostPage() {
   const [openPostId, setOpenPostId] = React.useState<string | null>(null);
   const [editTitle, setEditTitle] = React.useState('');
   const [editContent, setEditContent] = React.useState('');
-
+  
   const handleOpen = (post: Post) => {
     setOpenPostId(post.id);
     setEditTitle(post.title);

@@ -29,3 +29,5 @@ export type UserInfo = {
   name: string;
   role: string;
 }
+
+export type AsyncDataState = 'pending' | 'loading' | 'fulfilled' | 'error';

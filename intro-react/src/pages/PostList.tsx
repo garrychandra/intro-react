@@ -1,35 +1,11 @@
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, Container, Grid, Paper, styled, Typography } from "@mui/material";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { Box, Card, CardActionArea, CardContent, Container, Grid, Typography } from "@mui/material";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: (theme.vars ?? theme).palette.text.secondary,
-  ...theme.applyStyles('dark', {
-    backgroundColor: '#1A2027',
-  }),
-}));
-
-type User = {
-    id: number;
-    name: string;
-    email: string;
-}
-
-type Post = {
-    id: number;
-    user: User;
-    title: string;
-    content: string;
-}
+import { usePosts } from "../hooks/usePosts";
 
 export default function PostList(){
     const navigate = useNavigate();
-    const [posts, setPosts] = useState<Post[]>([]);
-    // const [sortedPosts, setSortedPosts] = useState<Post[]>([]);
+    const {posts, state, reload } = usePosts();
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState<string>();
     const [isSortedAscending, setIsSortedAscending] = useState<boolean>(true);
@@ -58,32 +34,18 @@ export default function PostList(){
         return sorted;
     }, [posts, sortBy, isSortedAscending]);
 
-    
-    const reloadPosts = useCallback(async () => {
-            const response = await fetch('http://localhost:5173/api/post');
-            if(response.status !== 200){
-                alert("Failed to fetch posts");
-                return;
-            }
-            const data = await response.json();
-            setPosts(data.records);
-        }, []);
-
-
     const filteredPosts = useMemo(() => 
         sortedPosts.filter(post => 
             post.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
             post.content.toLowerCase().includes(searchTerm.toLowerCase())
     ), [sortedPosts, searchTerm]);
 
-    useEffect(() => {
-        reloadPosts();
-    },[reloadPosts])
-
     return (
         <Container maxWidth={false} sx={{ width: '100%' }}>
             <h2>Posts</h2>
-            <button onClick={reloadPosts}>Reload Posts</button>
+            {state === 'loading' && <div>Loading...</div>}
+            {state === 'error' && <div>Error loading posts</div>}
+            <button onClick={reload}>Reload Posts</button>
             <select onChange={(e) => {
                 setSortBy(e.target.value);
             }} value={sortBy}>

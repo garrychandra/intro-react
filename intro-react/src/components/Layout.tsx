@@ -33,6 +33,7 @@ export function Layout(prps: PropsWithChildren) {
         </Box>
       </Toolbar>
     </AppBar>
+    <br />
     {prps.children}
   </Stack>
 }

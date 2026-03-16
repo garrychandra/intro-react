@@ -1,4 +1,4 @@
-import { Box, Button, Container, Paper, Stack } from "@mui/material";
+import { Button, Container, Box } from "@mui/material";
 import { Title } from "../components/Title";
 import { Link } from "react-router";
 import { useAppSelector } from "../hooks/useAppSelector";
@@ -6,18 +6,14 @@ import { useAppSelector } from "../hooks/useAppSelector";
 export default function HomePage() {
   const userInfo = useAppSelector(state => state.auth.userInfo)
   
-  return <Container>
-    <Stack alignItems='center' height='100%'>
-      <Box p={2} width='100%'>
-        <Paper >
-          <Stack p={2} gap={2} alignItems='center'>
-            <Title>Hello {userInfo?.name}!</Title>
-            <Link to='/post'>
-              <Button>Go To Posts</Button>
-            </Link>
-          </Stack>
-        </Paper>
+  return (
+    <Container>
+      <Box sx={{ maxWidth: 600, mx: 'auto', my: 4, textAlign: 'center' }}>
+        <Title>Hello {userInfo?.name}!</Title>
+        <Link to='/post'>
+          <Button sx={{ mt: 2 }}>Go To Posts</Button>
+        </Link>
       </Box>
-    </Stack>
-  </Container>
+    </Container>
+  )
 }

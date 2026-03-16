@@ -1,4 +1,4 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { AsyncDataState, PostListResponse  } from "../types";
 
 export type PostState = {
@@ -9,6 +9,16 @@ export type PostState = {
 const initialState: PostState = {
     dataState: 'pending'
 }
+
+export const reloadPosts = createAsyncThunk(
+    'post/reloadPosts',
+    async () => {
+      const result = await fetch('api/posts');
+      if (!result.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+      return (await result.json()) as PostListResponse;
+    });
 
 export const postSlice = createSlice({
   name: 'post',
@@ -21,6 +31,17 @@ export const postSlice = createSlice({
         state.dataState = action.payload
     }
   },
+  extraReducers: (builder) => {
+    builder.addCase(reloadPosts.pending, (state) => {
+      state.dataState = 'loading';
+    });
+    builder.addCase(reloadPosts.fulfilled, (state, action) => {
+      state.posts = action.payload;
+      state.dataState = 'fulfilled';
+    });
+    builder.addCase(reloadPosts.rejected, (state) => {
+      state.dataState = 'error';
+    });
 })
 
 export const postActions = postSlice.actions
